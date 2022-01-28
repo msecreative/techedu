@@ -1,0 +1,14 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+.techedu-label
+ {
+     @apply cursor-pointer block text-sm mb-1
+ }
+
+.techedu-input
+ {
+     @apply w-full rounded-sm
+ }
