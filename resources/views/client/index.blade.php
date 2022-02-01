@@ -8,6 +8,11 @@
             <a href="{{route('client.create')}}" class="rounded bg-sky-400 text-white px-3 py-1">Add New Client</a>
         </div>
     </x-slot>
+    @if (Session('success'))
+        <div class="text-center bg-green-300 text-white py-2 mt-12" id="stMsg">
+            <p>{{Session('success')}}</p>
+        </div>
+    @endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -26,22 +31,38 @@
                         </thead>
                         <tbody>
 
+                            @php
+                                function getImgUrl($img){
+                                    if (str_starts_with($img, 'http')) {
+                                       return $img;
+                                    }
+                                    return asset('storage/uploads') .'/'. $img;
+                                }
+                            @endphp
+
                             @foreach ($clients as $client)
                             <tr>
-                                <td class="border py-2 w-32 text-center"><img class="rounded-full w-20 mx-auto" src="{{$client->thumbnail}}" alt=""></td>
+                                <td class="border py-2 w-32 text-center"><img class="rounded-full w-20 mx-auto" src="{{ getImgUrl($client->thumbnail) }}" alt=""></td>
                                 <td class="border py-2 text-center">{{$client->name}}</td>
                                 <td class="border py-2 text-center">{{$client->username}}</td>
                                 <td class="border py-2 text-center">{{$client->phone}}</td>
                                 <td class="border py-2 text-center">{{$client->country}}</td>
                                 <td class="border py-2 text-center">
-                                    <a class="text-white bg-green-600 px-3 py-1 rounded" href="#">Edit</a> ||
-                                    <a class="text-white bg-red-600 px-3 py-1 rounded" href="#">Delete</a>
+                                    <div class="flex justify-center gap-3">
+                                        <a class="text-white bg-green-600 px-3 py-1 rounded" href="{{route('client.edit', $client->id)}}">Edit</a> ||
+                                        <form onsubmit="return confirm('Do you want to delete this client!')" action="{{route('client.destroy', $client->id)}}" method="POST">@csrf @method('DELETE')
+                                            <button type="submit" class="text-white bg-red-600 px-3 py-1 rounded" href="">Delete</button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach
 
                         </tbody>
                    </table>
+                   <div class="mt-6">
+                       {{$clients->links();}}
+                   </div>
                 </div>
             </div>
         </div>
