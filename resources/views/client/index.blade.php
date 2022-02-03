@@ -42,7 +42,7 @@
 
                             @foreach ($clients as $client)
                             <tr>
-                                <td class="border py-2 w-32 text-center"><img class="rounded-full w-20 mx-auto" src="{{ getImgUrl($client->thumbnail) }}" alt=""></td>
+                                <td class="border py-2 w-32 text-center"><img class="rounded-md w-20 mx-auto" src="{{ getImgUrl($client->thumbnail) }}" alt=""></td>
                                 <td class="border py-2 text-center">{{$client->name}}</td>
                                 <td class="border py-2 text-center">{{$client->username}}</td>
                                 <td class="border py-2 text-center">{{$client->phone}}</td>

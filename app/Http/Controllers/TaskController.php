@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $tasks = Task::orderBy('id', 'DESC')->paginate(10);
+        return view('task.index')->with(['tasks' => $tasks]);
     }
 
     /**
@@ -24,7 +26,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        return view('task.create')->with(['clients' => Client::all()]);
     }
 
     /**
@@ -35,7 +37,12 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'          => ['required', 'max:255', 'string'],
+            'price'         => ['required', 'max:255', 'integer'],
+            'client_id'     => ['required', 'max:255', 'integer'],
+            'description'   => ['required'],
+        ]);
     }
 
     /**
