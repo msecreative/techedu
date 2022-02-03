@@ -29,7 +29,7 @@
                             <div class="mt-6 flex-1">
                                 <label for="price" class="techedu-label">Price</label>
                                 <input type="number" name="price" value="{{old('price')}}" id="price" class="techedu-input">
-                                @error('name')
+                                @error('price')
                                     <p class="text-red-600">{{$message}}</p>
                                 @enderror
                             </div>
