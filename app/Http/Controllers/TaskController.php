@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class TaskController extends Controller
 {
@@ -15,7 +17,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::orderBy('id', 'DESC')->paginate(10);
+        $tasks = Task::where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->paginate(10);
         return view('task.index')->with(['tasks' => $tasks]);
     }
 
@@ -26,7 +28,19 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('task.create')->with(['clients' => Client::all()]);
+        return view('task.create')->with([
+            'clients' => Client::where('user_id', Auth::user()->id)->get(),
+        ]);
+    }
+
+    public function taskValidate(Request $request)
+    {
+        return $request->validate([
+            'name'          => ['required', 'max:255', 'string'],
+            'price'         => ['required', 'integer'],
+            'client_id'     => ['required', 'max:255', 'not_in:none'],
+            'description'   => ['required'],
+        ]);
     }
 
     /**
@@ -37,12 +51,17 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name'          => ['required', 'max:255', 'string'],
-            'price'         => ['required', 'max:255', 'integer'],
-            'client_id'     => ['required', 'max:255', 'integer'],
-            'description'   => ['required'],
+        $this->taskValidate($request);
+        Task::create([
+            'name'          => $request->name,
+            'slug'          => Str::slug($request->name),
+            'price'         => $request->price,
+            'client_id'     => $request->client_id,
+            'description'   => $request->description,
+            'user_id'       => Auth::user()->id,
         ]);
+
+        return redirect()->route('task.index')->with('success', 'Task Created');
     }
 
     /**
@@ -51,9 +70,10 @@ class TaskController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function show(Task $task)
+    public function show($slug)
     {
-        //
+        $task = Task::where('slug', $slug)->get()->first();
+        return view('task.show')->with('task', $task);
     }
 
     /**
@@ -64,7 +84,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return view('task.edit')->with(['task' => $task, 'clients' => Client::all()]);
     }
 
     /**
@@ -76,7 +96,18 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $this->taskValidate($request);
+
+        $task->update([
+            'name'          => $request->name,
+            'slug'          => Str::slug($request->name),
+            'price'         => $request->price,
+            'client_id'     => $request->client_id,
+            'description'   => $request->description,
+            'user_id'       => Auth::user()->id,
+        ]);
+
+        return redirect()->route('task.index')->with('success', 'Task Updated');
     }
 
     /**
@@ -87,6 +118,15 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+        return redirect()->route('task.index')->with('success', 'Task Deleted');
+    }
+
+    public function markAsComplete(Task $task)
+    {
+        $task->update([
+            'status' => 'complete'
+        ]);
+        return redirect()->back()->with('success', 'Task Mark as completed!');
     }
 }

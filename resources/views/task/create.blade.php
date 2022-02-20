@@ -13,6 +13,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
+                    @if ( count( $clients) == 0 )
+                        <div class="text-white bg-orange-500 text-center py-3 rounded-md text-xs font-medium">
+                            <p>You have to define any client</p>
+                            <p>You don't have any client </p>
+                            <a href="{{route('client.create')}}" class="inline-block bg-sky-400 text-xs mt-2 px-3 py-1 rounded-md">Add new client</a>
+                        </div>
+                    @endif
                     <form action="{{route('task.store')}}" method="POST" enctype="multipart/form-data">@csrf
                         <div class="mt-6 flex justify-between gap-4">
                             <div class="mt-6 flex-1">
@@ -64,4 +71,5 @@
             </div>
         </div>
     </div>
+
 </x-app-layout>

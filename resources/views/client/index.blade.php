@@ -8,11 +8,8 @@
             <a href="{{route('client.create')}}" class="rounded bg-sky-400 text-white px-3 py-1">Add New Client</a>
         </div>
     </x-slot>
-    @if (Session('success'))
-        <div class="text-center bg-green-300 text-white py-2 mt-12" id="stMsg">
-            <p>{{Session('success')}}</p>
-        </div>
-    @endif
+
+    @include('layouts.messages')
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -21,11 +18,13 @@
                    <table class="w-full border-collapse">
                         <thead>
                             <tr>
+                                <th class="border py-3 w-32">ID</th>
                                 <th class="border py-3 w-32">Thumbnail</th>
                                 <th class="border py-3">Name</th>
                                 <th class="border py-3">Username</th>
                                 <th class="border py-3">Phone</th>
                                 <th class="border py-3">Country</th>
+                                <th class="border py-3">Total Task</th>
                                 <th class="border py-3">Action</th>
                             </tr>
                         </thead>
@@ -42,11 +41,13 @@
 
                             @foreach ($clients as $client)
                             <tr>
+                                <td class="border py-2 text-center">{{$client->id}}</td>
                                 <td class="border py-2 w-32 text-center"><img class="rounded-md w-20 mx-auto" src="{{ getImgUrl($client->thumbnail) }}" alt=""></td>
                                 <td class="border py-2 text-center">{{$client->name}}</td>
                                 <td class="border py-2 text-center">{{$client->username}}</td>
                                 <td class="border py-2 text-center">{{$client->phone}}</td>
                                 <td class="border py-2 text-center">{{$client->country}}</td>
+                                <td class="border py-2 text-center"><a class="inline-block bg-pink-600 text-white rounded-full w-6" href="{{route('searchTaskByClient', $client)}}">{{count($client->tasks)}}</a></td>
                                 <td class="border py-2 text-center">
                                     <div class="flex justify-center gap-3">
                                         <a class="text-white bg-green-600 px-3 py-1 rounded" href="{{route('client.edit', $client->id)}}">Edit</a> ||

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ClientController extends Controller
@@ -15,7 +16,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $data = Client::latest()->paginate('8');
+        $data = Client::where('user_id', Auth::user()->id)->with('tasks')->latest()->paginate('8');
         return view('client.index')->with('clients', $data);
     }
 
@@ -61,6 +62,7 @@ class ClientController extends Controller
             'phone'    => $request->phone,
             'country'  => $request->country,
             'thumbnail'=> $thumb,
+            'user_id'  => Auth::user()->id,
             'status'   => $request->status,
         ]);
 
@@ -136,6 +138,7 @@ class ClientController extends Controller
             'phone'    => $request->phone,
             'country'  => $request->country,
             'thumbnail'=> $thumb,
+            'user_id'  => Auth::user()->id,
             'status'   => $request->status,
         ]);
 
@@ -153,6 +156,15 @@ class ClientController extends Controller
         Storage::delete('public/uploads/'.$client->thumbnail);
         $client->delete();
         return redirect()->route('client.index')->with('success', 'Client Deleted!');
+    }
+
+    public function searchTaskByClient(Client $client)
+    {
+        // dd($client);
+        // dd($client->tasks());
+        return view('task.searchByClient')->with([
+            'client' => $client
+        ]);
     }
 
     public $countries_list = array(

@@ -12,3 +12,5 @@ jQuery(document).ready(function($){
     }, 2000);
 
 });
+
+CKEDITOR.replace('description');
