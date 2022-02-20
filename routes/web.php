@@ -46,7 +46,7 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
     Route::delete('invoice/{invoice}', [InvoiceController::class, 'show'])->name('invoice.show');
     Route::delete('invoice/{invoice}/delete', [InvoiceController::class, 'destroy'])->name('invoice.destroy');
     Route::get('invoice/search', [InvoiceController::class, 'search'])->name('invoice.search');
-    Route::get('invoice/preview', [InvoiceController::class, 'preview'])->name('preview.invoice');
+    Route::get('invoice/preview', [InvoiceController::class, 'preview'])->name('invoice.preview');
 });
 
 

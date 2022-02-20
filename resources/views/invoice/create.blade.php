@@ -86,7 +86,7 @@
                     </table>
 
                     <div class="py-5 text-right text-white">
-                        <a href="{{route('preview.invoice')}}{{'?client_id=' .request('client_id') . 'status=' . request('status') . '&fromDate=' . request('fromDate') . 'endDate=' . request('endDate')}}" class="bg-sky-500 px-4 py-2" target="_blank">Preview</a>
+                        <a href="{{route('invoice.preview')}}{{'?client_id=' .request('client_id') . 'status=' . request('status') . '&fromDate=' . request('fromDate') . 'endDate=' . request('endDate')}}" class="bg-sky-500 px-4 py-2" target="_blank">Preview</a>
                     </div>
                     @endif
                 </div>
